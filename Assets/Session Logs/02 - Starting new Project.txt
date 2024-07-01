@@ -1,0 +1,56 @@
+Manejo de los Layouts de Unity, como mover ventanas y algunas opciones básicas. 
+Con "por defecto" puede valer perfectamente.
+
+Lo mismo para extension de colores para que el editor de Visual Studio se vea mejor. (Viasfora)
+
+Algunos tips de configuración del VS para que se lea mejor.
+
+Recordatorio de que las normas de nomenclatura son importantes para identificar facilmente los elementos.
+La consistencia y facilidad son esenciales para mantener y expandir el codigo correctamente.
+
+Util:
+	- Usar nombres adecuados para funciones, variables....
+	- Sin miedo a renombrar, ya que es para que sea mejor.
+	- Nunca usar letras simples, acronimos o abreviaturas, si hay bug, 
+	  sera mas facil de recordar que hace ese codigo ejemplo (p => pos => position)
+
+Bajar los assets con texturas y pequeñeces de: https://unitycodemonkey.com/download.php?dt=kitchenChaosProjectFiles&lecture=Assets
+(crear usuario gratis y listo)
+Luego doble clic (o arrastrar en el proyecto) y importar todo. 
+Saldrá en una carpeta _Assets dentro de Assets en el navegador de archivos.
+
+Empezamos creando un objeto llamado GlobalVolume, con un componente Volume, y creando un nuevo profile.
+Esto es para el postprocesado.
+
+Luego añadimos un plano 3D, aseguramos su posición 0,0,0 y la escala a 5,5,5
+
+Luego arrastramos encima varios objetos de dentro de PrefabsVisuals, player + counters + comidas
+
+Buscamos una posicion que veamos todo, clicamos en la camara de la lista de objetos en la jerarquia,
+CTRL+SHIFT+F y veremos que lo autocentra. Luego en el componente Camara, Rendering, activamos el PostProcessing.
+
+Volvemos al post-procesado, GlobalVolume -> Volume, añadimos un override ToneMapping y, 
+en la pestaña GAME, veremos cambios en la tonalidad al cambiar entre NONE y Neutral.
+
+Repetimos con el Color Adjustments subiendo la saturación y contraste a 20.
+
+Añadimos el StoveCounter_Visual y activamos el objeto "interior" de este llamado StoveOnVisual.
+
+Volvemos a añadir un postprocesado llamado Bloom, activando Threshold (0.95) y Intensity (1). 
+Jugar un poco con todos estos valores.
+
+Añadir tambien Vignette, Intensity (0.25) Smoothness (0.4). Añade como circulo negro en los bordes.
+
+Volvemos a la camara de eescena, Rendering, activar Anti-Aliasing o en el archivo de URP, usar el MSAA 4x.
+
+Posicionar la camara con un punto de vista mas "final". Posicion 0/21.5/-21.3 Rotacion 46/0/0
+Rotar todo para que mire a camara.
+
+Añadir en el URP_Renderer ScreenSpaceAmbientOclusion para un poco de sobras mas detalladas.
+Valores Interleaved Gradient/4/0.3/100/1/DepthNormals/Medium/falso/falso/Alto/Alto
+
+Activar y desactivar el componente Volume para ver las diferencias.
+
+Borrar todo menos el suelo, el global volume, camera y luz.
+
+Fin de la sessión 2. Timestamp 55:03
