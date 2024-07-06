@@ -1,0 +1,50 @@
+Empieza creando un controlator para el personaje muy simple. 
+Con el GetKey para que no solo cuente cuando se presiona la tecla (GetKeyDown)
+Usamos el Input Legacy, que es muy sencillo y que cambiaremos al New mas adelante.
+Concepto importante del deltaTime para que la velocidad sea constante, sea cual sea tu FramesPerSecond.
+Se expone al editor con [SerializeField], para mantener las variables privadas.
+
+Pequeña explicación de los materiales. Aqui se meten las texturas y todo el rollo. 
+Cambiar un material afecta a todos los objetos que la usen.
+Se añade el visual al objeto player y jugamos un poco con el material.
+Lo hacemos rotar cambiando su transform.forward mirando la direccion de movimiento.
+Como es muy directo, añadimos la funcion Slerp para que no sea immediato.
+Parametros forward, moveDirection y el Time.delta * velocidad de rotacion. 
+Podemos exponer la rotacion como la velocidad lineal si se quiere.
+
+Explicación del Animator y animaciones. Son una Maquina de estados finita (una IA muy simple).
+El animador solo funciona con hijos, no con el objeto padre.
+Explica como gravar las animaciones, crear estados y añadir las transiciones.
+Crear una variable bool para poder cambiar de Idle a Walking.
+Crear un nuevo script para las animaciones, con su constante para la variable de cambio.
+En el script del player, Crear una variable y funcion nueva que la devuelva. Esta mira que el moveDir no sea 0.
+Añadir el script de animacion al hijo, obtener el animator, variable de editor del player.
+En su update, hacer el "animator.SetBool(IS_WALKING, player.IsWalking())".
+
+Descargamos Cinemachine con el package manager.
+Creamos una Virtual Camera. 
+Volver a poner los mismos parametros que la antigua en esta.
+
+Extraemos el input del player, para poder refactorizar solo eso.
+Añadimos el nuevo script al player y llamamos a la funcion de GetInputNormalized.
+Todo deberia seguir igual.
+
+Creamos un InputActions con un solo mapa de acciones  (Player) y una acción (Move).
+La accion con value Vector2. Tiene un hijo 2D Vector up/down/right/left.
+Mapeamos las teclas a los controles.
+Clicamos en el editor en lo creado y generamos la classe c# con este.
+
+Vamos al GameInput nuestro:
+    private void Awake() {
+        PlayerInputActions playerInputActions = new PlayerInputActions();
+        playerInputActions.Player.Enable();
+    }
+
+En vezx de los ifs:
+    Vector2 inputVector = playerInputActions.Player.Move.ReadValue<Vector2>();
+
+Igual que hemos añadido el WASD, Añadir las flechas de dirección. 
+Con un binding normal, el left stick (gamepad)
+Añadir a todos un processor de Normalizado de Vector2 y quitar el Normalize del código.
+
+Fin sesión 3. Video en 2:03:22
