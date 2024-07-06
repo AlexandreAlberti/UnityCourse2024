@@ -48,3 +48,27 @@ Con un binding normal, el left stick (gamepad)
 Añadir a todos un processor de Normalizado de Vector2 y quitar el Normalize del código.
 
 Fin sesión 3. Video en 2:03:22
+
+Session 3.1 
+Colisiones.
+
+Intenta crear un Raycast/CapsuleCast para mirar si hay colision y en ese caso, no dejar que se mueva.
+No me gusta, mejor le añado un rigidbody sin gravity y con la posicion congelada en y y la rotacion en x,z
+Tambien añado un capsuleCollider con radio 0.65, altura 2 y posicion y = 1.
+
+Ahora, como con el player, creamos un objeto vacio y le ponemos el visual del ClearCounter.
+Le ponemos un boxCollider con centro y = 0.5 y medidas 1.5 a todo.
+Lo colocamos en alguna position un poco lejos del player. Deberiamos chocar con esta al hacer play.
+Hacemos un prefab de esta e la ponemos desde el prefab a la escena.
+Refactorizamos el script del player, poniendo todo lo actual en un HandleMovement.
+Creamos funcion HandleInteractions, llamandola tambien desde el Update.
+Creamos una variable (lastInteractionDir) para guardar la ultima direccion de movimiento y se actualiza si andamos.
+Tiramos un Raycast como condicion de un if y podemos sacar que objeto es:
+        if (Physics.Raycast(transform.position, lastInteractionDir, out RaycastHit raycastHit, INTERACT_DISTANCE)) {
+            Debug.Log(raycastHit.transform);
+        }
+Creamos un Script ClearCounter y lo metemos en la prefab.
+Creamos una funcion publica para mostrar un log y obtenemos el Componente dentro del if del raycast y la llamamos.
+Creamos un nuevo layer Counters para los counters y lo asignamos al prefab.
+Creamos un parametro de editor con LayerMask, lo ponemos al final del raycast, como ultimo parametro.
+Asignamos a ese LayerMask el tipo Counters.
