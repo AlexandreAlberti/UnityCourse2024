@@ -71,3 +71,7 @@ Lo mismo para asegurarse que los sprites son los del ScriptableObject.
 Crear un evento "public event EventHandler OnPlayerGrabbedObject;" y lanzarlo cuando toca.
 Crear un nuevo Script ContainerCounterVisual que se suscriba al evento y usando el animator de la prefab del counter -> Visual, lanze un SetTrigger
 Ahora la puerta se abre y cierra al spawnear el objeto.
+
+
+5.1 Prefab Variant Para todos los objetos del juego
+Asi de facil, prefab variant a saco.

@@ -18,13 +18,11 @@ public class ContainerCounter : KitchenObjectParentAbstract {
 
     public override void Interact(Player player) {
 
-        KitchenObject kitchenObject = GetKitchenObject();
-
-        if (!kitchenObject && !player.HasKitchenObject()) {
+        if (!player.HasKitchenObject()) {
             // Spawn new KO
             Transform kitchenObjectTransform = Instantiate(itemPrefab.prefab, GetKitchenObjectFollowTransform());
             kitchenObjectTransform.localPosition = Vector3.zero;
-            kitchenObject = kitchenObjectTransform.GetComponent<KitchenObject>();
+            KitchenObject kitchenObject = kitchenObjectTransform.GetComponent<KitchenObject>();
             kitchenObject.SetKitchenObjectParent(player);
             OnPlayerGrabbedObject?.Invoke(this, EventArgs.Empty);
         }

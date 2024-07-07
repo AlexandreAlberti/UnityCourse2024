@@ -6,14 +6,12 @@ public class ClearCounter : KitchenObjectParentAbstract {
 
     public override void Interact(Player player)
     {
-        KitchenObject kitchenObject = GetKitchenObject();
-
-        if (!kitchenObject && player.HasKitchenObject()) {
+        if (!HasKitchenObject() && player.HasKitchenObject()) {
             // Drop to Counter
             player.GetKitchenObject().SetKitchenObjectParent(this);
-        } else if (kitchenObject && !player.HasKitchenObject()) {
+        } else if (HasKitchenObject() && !player.HasKitchenObject()) {
             // Grab by player
-            kitchenObject.SetKitchenObjectParent(player);
+            GetKitchenObject().SetKitchenObjectParent(player);
         }
     }
 }
