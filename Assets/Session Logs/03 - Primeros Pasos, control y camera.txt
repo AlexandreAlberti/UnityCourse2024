@@ -72,3 +72,5 @@ Creamos una funcion publica para mostrar un log y obtenemos el Componente dentro
 Creamos un nuevo layer Counters para los counters y lo asignamos al prefab.
 Creamos un parametro de editor con LayerMask, lo ponemos al final del raycast, como ultimo parametro.
 Asignamos a ese LayerMask el tipo Counters.
+
+Fin sesión 3.1 Video en 2:38:20

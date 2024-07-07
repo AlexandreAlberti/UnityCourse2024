@@ -1,0 +1,55 @@
+Creamos un nuevo action Interact en el Player Input Actions, y asignamos E a este boton. 
+Y de paso el boton south del gamepad.
+Punto +: Los botones mola que funcionen como eventos, asi nos ahorramos comprovar en cada frame.
+Nos subscribimos a "playerInputActions.Player.Interact.performed += Interact;"
+Creando la funcion "private void Interact(UnityEngine.InputSystem.InputAction.CallbackContext obj) {}"
+Cramos un evento propio: "public event EventHandler OnInteractAction;"
+Invocamos este evento en la funcion Interact: "OnInteractAction?.Invoke(this, EventArgs.Empty);"
+Nos subscribimos en la clase player "input.OnInteractAction += OnInteractAction;"
+Usamos en contenido actual del metodo "HandleInteractions" en "private void OnInteractAction(object sender, EventArgs e) {"
+
+Vamos ahora al prefab del counter Visual, duplicamos el objeto interno de los visuales.
+Al segundo lo llamamos selected y le cambiamos el material a counter selected y lo escalamos un poco para que resalte.
+Creamos un script SelectedCounterVisual y lo asignamos al nuevo visual
+
+Refactorizamos un poco la logica del player:
+	- Creamos una variable para el selected counter actual.
+	- Volvemos a poner la logica en HandleInteractions, pero en vez de interactuar, lo que hacemos es guardarlo en la variable.
+	- En los ifs del raycast y el TryGetComponent, ponemos un else para que el selected sea nulo
+	- En el OnInteractAction, protegemos la nueva variable de nuls y si todo ok, interactuamos.
+
+Para que los counters se enteren que han sido seleccionados (Player):
+    public event EventHandler OnSelectedCounterChange;
+    public class OnSelectedCounterChangeEventArgs : EventArgs {
+        public ClearCounter selectedCounter;
+    }
+
+	creamos una funcion SetSelectedCounter y la llamamos en todos los sitios donde asignamos a selectedClearCounter (de paso actualizamos la variable):
+    private void SetSelectedCounter() {
+        selectedClearCounter = clearCounter;
+        OnSelectedCounterChange?.Invoke(this, new OnSelectedCounterChangeEventArgs {
+            selectedCounter = selectedClearCounter
+        });
+    }
+Singleton para player con:
+    public static Player Instance { get; private set; }
+
+    private void Awake() {
+        if (Instance) {
+            Debug.LogError("Something went wrong, 2 players in scene");
+        }
+
+        Instance = this;
+    }
+
+Y en SelectedCounterVisual nos subscribimos usando Player.Instance.OnSelec......... += ......
+Con su nueva funcion dentro.
+Le metemos dos propiedades del editor, los visuales seleccionados como Game Object, y el ClearCounter.
+Los asignamos bien en el editor de la prefab y en la funcion que llama el subsciptor:
+    private void CounterChanged(object sender, EventArgs e) {
+        if (e is Player.OnSelectedCounterChangeEventArgs e2) {
+            clearCounterVisual.SetActive(clearCounter == e2.selectedCounter);
+        }
+    }
+
+Fin sesión 4 Video en 3:11:20
