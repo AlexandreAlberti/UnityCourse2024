@@ -1,0 +1,73 @@
+Creamos una prefab de tomate como ya hemos visto.
+En el ClearCounter le ponemos una propiedad de editor para ponerle esta prefab de tomate y otra para el spawn point
+Le ponemos un gameobject nuevo a la prefab del counter para marcar el punto de spawn (y=1.264)
+Asignamos los valores a la prefab
+
+Duplicamos la prefab y cambiamos el visual para el queso.
+Sobreescribir en escena el valor del Tomate por el del queso.
+Hacer esto para cada tipo va a ser un peñazo -> ScriptableObject
+
+Nuevo Script KitchenObjectSO, cambiar la herencia de MonoBehaviour a ScriptableObject.
+Poner propiedad publica para la prefab a usar, un Sprite para el icono y un string para el nombre.
+Añadimos cabecera [CreateAssetMenu()] y creamos carpetas apropiadas para ello. 
+Creamos un nuevo SO de este tipo para el tomate, asignamos la prefab,sprite y nombre.
+
+En clear counter, cambiamos el tipo de la prefab por el SO.
+Creamos otro script KitchenObject y la metemos a las 2 prefabs.
+Propiedad Editor del KitchenObjectSO + un metodo que lo devuelva. 
+Desde el ClearCounter, ahora podemos obtener el componente nuevo de KitchenObject.
+
+Crear en el ClearCounter una variable KitchenObject para que tenga el ultimo objeto spawneado y no permita sacar mas de uno.
+Crear en el KitchenObject una variable ClearCounter con su Getter y su Setter.
+En el if del ClearCounter -> Interact, hacer el set.
+En el else, de momento solo un Log.
+En el ClearCounter, crear los Get/Set/Has/Clear para el kitchen object
+En el KitchenObject, en el Set del ClearCounter -> 
+	- Primero hacer Clear del actual.
+	- Si ya tiene un objeto, lanzar error
+	- Reasignar (el set)
+	- Meterle el this al nuevo ClearCounter
+	- transform.parent = clearCounter.GetKitchenObjectFollowTransform();
+	- localPosition a zero, por si las moscas.
+
+Añadimos al Interact del ClearCounter un parametro player y intentamos hacer un set al player en el else.
+Creamos un Script interface IKitchenObjectParent con las cabeceras:
+    public Transform GetKitchenObjectFollowTransform();
+    public void SetKichenObject(KitchenObject kitchenObject);
+    public KitchenObject GetKitchenObject();
+    public void ClearKitchenObject();
+    public bool HasKitchenObject();
+
+Creamos una clase abstracta: public class KitchenObjectParentAbstract : MonoBehaviour, IKitchenObjectParent
+con la variable y los Get/Set/Has/Clear. Tenemos que llevarnos las variables necesarias solo.
+
+ClearCounter y Player heredan de esta, y no de MonoBehaviour.
+En KitchenObject, ahora trabaja con IKitchenObjectParent y no con clearCounter.
+Asegurarse de que todo va bien y el player puede agarrar objetos (crear el punto del KitchenObject, etc)
+Para terminar de coger/Dejar objetos con el Counter, dentro del interact:
+    if (!kitchenObject && !player.HasKitchenObject()) {
+        // Spawn new KO
+        Transform kitchenObjectTransform = Instantiate(itemPrefab.prefab, GetKitchenObjectFollowTransform());
+        kitchenObjectTransform.localPosition = Vector3.zero;
+        kitchenObject = kitchenObjectTransform.GetComponent<KitchenObject>();
+        kitchenObject.SetKitchenObjectParent(this);
+    } else if (!kitchenObject && player.HasKitchenObject()) {
+        // Drop to Counter
+        player.GetKitchenObject().SetKitchenObjectParent(this);
+    } else if (kitchenObject && !player.HasKitchenObject()) {
+        // Grab by player
+        kitchenObject.SetKitchenObjectParent(player);
+    }
+
+Crear una prefab base del ClearCounter con lo minimo (TopPoint + colliders)
+Crear prefab variant para el clear counter desde esta base y dejarla igual que la original.
+Crear otra prefab variant para el containerCounter con un nuevo script.
+Hacer un refactor de nombres para que se usen las genericas y no las especificas del ClearCounter
+Añadir en la ParentAbstract -> public virtual void Interact(Player player) {} y añadir override a las de los counters.
+El jugador ya puede pillar objetos del Container y dejarlos y recogerlos del Clear.
+Poner que el SelectedCounterVisual sea con arrays y no con objetos simples para que funcione para todos los hijos del container.
+Lo mismo para asegurarse que los sprites son los del ScriptableObject.
+
+Crear un evento "public event EventHandler OnPlayerGrabbedObject;" y lanzarlo cuando toca.
+Crear un nuevo Script ContainerCounterVisual que se suscriba al evento y usando el animator de la prefab del counter -> Visual, lanze un SetTrigger
+Ahora la puerta se abre y cierra al spawnear el objeto.
