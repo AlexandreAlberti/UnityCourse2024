@@ -75,3 +75,5 @@ Ahora la puerta se abre y cierra al spawnear el objeto.
 
 5.1 Prefab Variant Para todos los objetos del juego
 Asi de facil, prefab variant a saco.
+
+Fin de session. Video a 4:23:40
