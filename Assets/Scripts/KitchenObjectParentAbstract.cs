@@ -30,4 +30,7 @@ public class KitchenObjectParentAbstract : MonoBehaviour, IKitchenObjectParent
 
     public virtual void Interact(Player player) {
     }
+
+    public virtual void InteractAlternate(Player player) {
+    }
 }

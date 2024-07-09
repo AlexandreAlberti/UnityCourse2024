@@ -20,9 +20,7 @@ public class ContainerCounter : KitchenObjectParentAbstract {
 
         if (!player.HasKitchenObject()) {
             // Spawn new KO
-            Transform kitchenObjectTransform = Instantiate(itemPrefab.prefab, GetKitchenObjectFollowTransform());
-            kitchenObjectTransform.localPosition = Vector3.zero;
-            KitchenObject kitchenObject = kitchenObjectTransform.GetComponent<KitchenObject>();
+            KitchenObject kitchenObject = KitchenObject.SpawnKitchenObject(itemPrefab, this); 
             kitchenObject.SetKitchenObjectParent(player);
             OnPlayerGrabbedObject?.Invoke(this, EventArgs.Empty);
         }

@@ -15,3 +15,4 @@ MonoBehaviour:
   prefab: {fileID: 2891734092946918014, guid: d2cb29adecdec4e4e9ab590a65fd8194, type: 3}
   sprite: {fileID: 21300000, guid: 91e8fe3de9249fc44b7bdd8050062896, type: 3}
   objectName: Tomato
+  slicedKitchenbjectSO: {fileID: 11400000, guid: 1d6075f6f7083d346ba5604cf9006206, type: 2}

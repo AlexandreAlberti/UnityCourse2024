@@ -1,0 +1,26 @@
+Creamos una variante de prefab para el mueble cortante, siguiendo el ejemplo del anterior, el que contiene. 
+Creamos el script CuttingCounter, que herede del KitchenObjectParentAbstract. Como el ClearCoutner.
+Lo ponemos en la prefab padre. Ponemos el link al script de Seleccion. El spawnPoint tiene que estar en y=1.3
+Creamos una nueva accion (PlayerInputActions -> InteractAlternate) con el boton F o GamePad (Este).
+Vamos a nuestro GameInput y hacemos lo mismo que con la otra interaccion.
+Seguimos por Player, KitchenObjectParentAbstract y ya podemos atacar solo al CuttingCounter.
+
+Para hacer el corte, vamos a destruir el objeto antiguo y a crear uno nuevo.
+Creamos otro prefab y otro ScriptableObject para cada unidad con su cortado.
+
+Hacemos un refactor del spawn del objeto, ya que repetimos codigo entre el Countainer y el Cutting. 
+En el kitchen object hacemos un selfDestruct:
+    public void DestroySelf() {
+        this.kitchenObjectParent.ClearKitchenObject();
+        Destroy(gameObject);
+    }
+(1) En el SO, añadimos un campo para otro SO que será el del cortado y lo llenamos para los 3 basicos.
+En el cutter, obtenemos el KO que esta encima, miramos si su SO tiene una variante cortada y si es asi:
+    - instanciamos la prefab con el metodo refactor
+    - Hacemos que el original se autodestruya
+
+Para hacer mejor los cortes, ponemos un nuevo SO, lo llamamos CuttingRecipeSO, con sus parametros in-out de tipo KitchenObjectSO.
+Creamos carpetas para organizar y hacer las 3 recetas y las llenamos.
+
+Ponemos un array como propiedad de editor en el counterCutter. Creamos un metodo para iterar entre estas.
+Usamos este metodo y quitamos el campo del (1).

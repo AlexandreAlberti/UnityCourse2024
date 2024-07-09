@@ -10,9 +10,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7f02c70267787bd45b0bde2ed4142b45, type: 3}
-  m_Name: Letucce
+  m_Name: CuttedCheese
   m_EditorClassIdentifier: 
-  prefab: {fileID: 2891734092946918014, guid: 4ae6397cda4a6544c94718ad98711698, type: 3}
-  sprite: {fileID: 21300000, guid: e1c23b5aded59d84da30738d3267a6c9, type: 3}
-  objectName: Letucce
-  slicedKitchenbjectSO: {fileID: 11400000, guid: d190fee9580c822429c05de194031f66, type: 2}
+  prefab: {fileID: 2891734092946918014, guid: 149a83be89190fd419375ca146ecbdf2, type: 3}
+  sprite: {fileID: 21300000, guid: 549cb4f2b86d1b84d8cd41c1cfde26c8, type: 3}
+  objectName: Cutted Cheese

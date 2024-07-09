@@ -33,6 +33,7 @@ public class Player : KitchenObjectParentAbstract {
 
     private void Start() {
         input.OnInteractAction += OnInteractAction;
+        input.OnInteractAlternateAction += OnInteractAlternateAction;
     }
 
     private void Update() {
@@ -89,6 +90,12 @@ public class Player : KitchenObjectParentAbstract {
     private void OnInteractAction(object sender, EventArgs e) {
         if (selectedClearCounter) {
             selectedClearCounter.Interact(this);
+        }
+    }
+
+    private void OnInteractAlternateAction(object sender, EventArgs e) {
+        if (selectedClearCounter) {
+            selectedClearCounter.InteractAlternate(this);
         }
     }
 }
