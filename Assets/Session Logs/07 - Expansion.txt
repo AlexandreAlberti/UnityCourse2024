@@ -1,0 +1,37 @@
+Queremos que cueste un cierto numero de veces que se tenga que pulsar la accion secundaria para que corte algo.
+Ponemos en el cuttingCounter una variable que cuente y un maximo en la receta de corte.
+No hacemos el cambio de objeto si no se han cumplido los N cortes.
+
+Vamos a meterle una barra de progreso. Script ProgressBarUI con:
+    [SerializeField] private GameObject progressBar;
+    [SerializeField] private Image progressBarImage;
+
+En Start empieza vacia (progressBarImage.fillAmount = 0) y desactivada (progressBar.SetActive(false))
+Creamos funciones de Restart (activar y poner a 0), Deactivate (desactivar) y update del progreso.
+Creamos una prefab nueva, metemos un canvas con RenderMode = WorldSpacem medidas 1x0.2
+Le metemos una imagen dentro, que ocupe todo el espacio, negra, la asignamos a "progressBar".
+Le metemos otra un poco mas grisacea pero con margenes de 0.02
+Le metemos la tercera, de color amarillento con el sprite White_1x1, la asignamos a "progressBarImage". 
+ImageType = filled, FillMethod Horizontal y FillOrigin Left.
+
+En el cutting counter creamos una propiedad de editor de la progressBarUI
+Le metemos la prefab a altura y=2.25 + asignamos al CuttingCounter script.
+En el CuttingCounter, llamamos a las funciones:
+    - Restart cuando ponemos el objeto (siempre que haya receta).
+    - Deactivar cuando el corte termina o quitamos el objeto.
+    - Progress Update cuando el contador se actualiza.
+
+Creamos un script FaceCamera con:
+    void LateUpdate() {
+        transform.forward = Camera.main.transform.forward;
+    }
+Se lo metemos al Canvas.
+
+Duplicamos el ContainerCounterVisual, lo llamamos CutterCounterVisual y cambiamos el nombre de animacion por Cut, cambiando los nombres para que tengan sentido
+Metemos el script al Visual de la prefab, asignamos como toca y listo.
+
+Vamos con la basura:
+Creamos una prefab variant del Base, le metemos los visuales de la basura, el script de selected en el duplicado con su material...
+Creamos un script para la papelera TrashCounter y si el player tiene algo, lo matamos como en el cutting.
+
+Fin de session. Video a 5:17:30

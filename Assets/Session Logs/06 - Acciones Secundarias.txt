@@ -24,3 +24,5 @@ Creamos carpetas para organizar y hacer las 3 recetas y las llenamos.
 
 Ponemos un array como propiedad de editor en el counterCutter. Creamos un metodo para iterar entre estas.
 Usamos este metodo y quitamos el campo del (1).
+
+Fin de session. Video a 4:46:30
