@@ -1,0 +1,76 @@
+Queremos que cueste un cierto numero de veces que se tenga que pulsar la accion secundaria para que corte algo.
+Ponemos en el cuttingCounter una variable que cuente y un maximo en la receta de corte.
+No hacemos el cambio de objeto si no se han cumplido los N cortes.
+
+Vamos a meterle una barra de progreso. Script ProgressBarUI con:
+    [SerializeField] private GameObject progressBar;
+Vamos con la cocina:
+Creamos una prefab variant del Base, le metemos los visuales de la cocina, el script de selected en el duplicado con su material...
+Creamos un script para la cocina StoveCounter y lo asignamos todo lo que es por defecto.
+
+Queremos algo parecido al cutting, recetas y funcionamiento base. Copiamos el tema recetas y tal.
+Tambien necesitamos los Prefabs y KitchenObjects para el cocinado y el quemado.
+Creamos la receta de MeatCookingRecipe y lo asignamos con tiempo de cocinado 5s y tiempo de quemado 5s.
+
+Vamos con el StoveCounter Script.
+Solo tendremos la accion normal, donde solo colocaremos el objeto si tiene receta de cocina.
+Si la tiene, entonces guardamos la receta en una variable de clase y dejamos el objeto.
+La parte de recojer el objeto va igual.
+Ponemos dos GameObject como variables de editor y linkamos las particulas y efecto de encendido del prfeab.
+
+Para gestionar la cocina, creamos una enum con valores STOPPED/COOKING/BURNING.
+Necesitaremos dos float para contar el tiempo que llevamos en cada estado (cocinando y quemando)
+Tambien nos hara falta 2 progress bar (a la de quemando le ponemos dentro del prefab de stove el color rojo).
+Hacemos un refactor, habiendo creado el metodo activar y del Restart le hemos quitado el activar. 
+Hacemos una variable de clase con el nombre de la enum.
+En el Start, ponemos las barras de progreso Restart y desactivadas y los contadores a 0, la receta a null y el estado a STOPPED.
+Nos aseguramos que las particulas y encendido estan desactivadas.
+Cuando cojemos el objeto, hacemos lo mismo, todo a 0 y Desactivamos las particulas y encendido.
+Cuando lo dejamos, aseguramos dejar el tiempo cocinando a 0, el estado a COOKING y Reseteamos las dos barras.
+Activamos la de cocinar. Y las particulas y encendido.
+
+Luego usaremos la funcion de Unity Update(), en esta meteremos dentro de un if(receta), todo el contenido que se describe:
+ - Hacemos un switch con el estado enumerativo.
+ - En STOPPED, dejamos la receta a null
+ - EN COOKING:
+    -> le incrementamos al contador de cocinando el deltaTime y actualizamos la barra de progreso dividiendo este por el tiempo en receta.
+    -> Si el contador es mas grande que el tiempo de cocinado de la receta, cambiamos el objeto (como en cutting) a cocinado
+    -> Desactibamos la barra de progreso y activamos la de quemando. 
+    -> Cambiamos el estadoa BURNING y aseguramos el tiempo de quemado a 0.
+ - EN BURNING:
+    -> le incrementamos al contador de quemando el deltaTime y actualizamos la barra de progreso dividiendo este por el tiempo en receta.
+    -> Si el contador es mas grande que el tiempo de cocinado de la receta, cambiamos el objeto (como en cutting) a quemado
+    -> Desactibamos la barra de progreso y el estado a STOPPED.
+    -> Desactivamos las particulas y encendido.
+
+
+Ahora que lo tenemos todo ok, movemos las particulas y encendido a una clase StoveCounterVisual.
+Creamos un evento de OnStateChanged y un EventArgs con el estado.
+En vez de cambiar el estado a saco, creamos:
+    private void ChangeState(Status newStatus) {
+        status = newStatus;
+
+        OnStateChanged?.Invoke(this, new OnStateChangedEventArgs {
+            state = status
+        });
+    }
+Y llamamos a esta, desde el Visual:
+    void OnStateChanged(object sender, StoveCounter.OnStateChangedEventArgs args) {
+        switch (args.state) {
+            case StoveCounter.Status.COOKING:
+                stoveOnVisual.SetActive(true);
+                stoveOnParticlesVisual.SetActive(true);
+                break;
+            case StoveCounter.Status.BURNING:
+                stoveOnVisual.SetActive(true);
+                stoveOnParticlesVisual.SetActive(true);
+                break;
+            case StoveCounter.Status.STOPPED:
+            default:
+                stoveOnVisual.SetActive(false);
+                stoveOnParticlesVisual.SetActive(false);
+                break;
+        }
+    }
+
+Fin de session. Video a 5:56:05

@@ -27,6 +27,7 @@ public class CuttingCounter : KitchenObjectParentAbstract {
             if (recipe) {
                 cuttingProgress = 0;
                 progressBar.Restart();
+                progressBar.Activate();
             }
         } else if (HasKitchenObject() && !player.HasKitchenObject()) {
             // Grab by player

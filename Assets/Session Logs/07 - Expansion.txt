@@ -34,4 +34,4 @@ Vamos con la basura:
 Creamos una prefab variant del Base, le metemos los visuales de la basura, el script de selected en el duplicado con su material...
 Creamos un script para la papelera TrashCounter y si el player tiene algo, lo matamos como en el cutting.
 
-Fin de session. Video a 5:17:30
+Fin de session. Video a 5:19:40
