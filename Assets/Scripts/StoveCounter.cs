@@ -51,6 +51,14 @@ public class StoveCounter : KitchenObjectParentAbstract {
             progressBarCooking.Deactivate();
             progressBarBurning.Deactivate();
             ChangeState(Status.STOPPED);
+        } else if (HasKitchenObject() && player.HasKitchenObject() && player.GetKitchenObject() is PlateKitchenObject plateKitchenObject) {
+            // Grab by player in a plate if we can
+            if (plateKitchenObject.TryAddIngredient(GetKitchenObject().GetKitchenObjectSO())) {
+                progressBarCooking.Deactivate();
+                progressBarBurning.Deactivate();
+                ChangeState(Status.STOPPED);
+                GetKitchenObject().DestroySelf();
+            }
         }
     }
 

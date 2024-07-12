@@ -1,0 +1,74 @@
+Vamos a darle al dispensador de platos:
+
+Creamos una prefab variant del Base, le metemos los visuales del dispensador de platos, el script de selected en el duplicado con su material...
+Creamos un script para el dispensador PlatesCounter y lo asignamos todo lo que es por defecto.
+Vamos a crear tambien un Script para la pila de platos, ya que lo mejor es que se gestione todo con visuales y se haga spawn del plato como el container.
+
+En el Counter:
+	- El SO del plato, cada cuando queremos añadir un plato a la pila y el maximo de platos, como variables de editor
+	- el contador de tiempo del siguiente spawn, cuantos platos hay como variables de clase.
+	- Creamos evento para que el visual se actualize: public event "EventHandler<int> OnPlatesAmountChange"
+	- En El Start, iniciamos los dos contadores a 0
+	- En el Update, si el contador de platos es mas pequeño que el maximo:
+		+ al de tiempo le añadimos el Time.delta
+		+ Si es mas grande que el tiempo de spawn:
+			- le quitamos al contador el tiempo de spawn (o lo ponemos a 0)
+			- sumamos 1 al numero de platos
+			- Invocamos el evento del visual para que se actualize
+	- En el Interact, copiamos del container, añadimos en el if que por lo menos haya un plato spawneado y le quitamos 1 a ese contador.
+
+Para el visual, le metemos un array como variable de editor de GameObjects. 
+Creamos la pila de tres platos bien puestos y los ponemos en el array del mas bajo al mas alto.
+Nos suscribimos al evento del counter y cuando lo recibimos:
+	- Si tenemos una pila con Longitud >= 1 -> en la posicion 0 del array , le ponemos .SetActive(amount >= 1)
+	- Si tenemos una pila con Longitud >= 2 -> en la posicion 1 del array , le ponemos .SetActive(amount >= 2)
+	- Si tenemos una pila con Longitud >= 3 -> en la posicion 2 del array , le ponemos .SetActive(amount >= 3)
+Asi nos quedamos bien cubiertos ante errores de asignacion al editar.
+
+Con esto ya tenemos lo basico, pero se comporta como cualquier otro Objeto y lo que queremos es apilar cosas en este.
+
+Creamos un Script PlateKitchenObject que herede de KitchenObject y se lo metemos al prefab del plato.
+Le ponemos 3 variables de editor: Lista de SO admitidos, el SO de la carne cocida y quemada.
+En este script le metemos una List<KitchenObjectSO>, la iniciamos en el Start.
+Creamos un evento con un EventArgs con esa lista dentro.
+Creamos un metodo publico que añada el elemento a la lista si no existe, y devuelva true/false si se ha añadido bien.
+	- Miramos que la lista de permitidos, si NO es asi, return false;
+	- Miramos que la lista lo contiene, si es asi, return false;
+	- Miramos que si es tipo carne cocinada, si en la lista existe carne quemada, return false
+	- Miramos el caso inverso de las carnes
+	- Si pasa todos estos checks, lo añadimos a la lista de ingredientes dentro de esto.
+	- Invocamos el evento con la lista actualizada.
+	- Devlovemos true.
+
+Creamos el Script PlateKitchenObjectVisual, que se suscribe al evento y como en el caso del plato.
+Ponemos todos los objetos como GameObject desactivados en las propiedades de editor.
+Ponemos todos los objetos (los SO para comparar) en las propiedades de editor.
+En la Accion, hacemos para los 6 -> "bread.SetActive(args.listOfIngredients.Contains(breadSO));" con los atributos oportunos.
+
+En el script del clear counter (Y luego del cutting), añadimos el caso que el player si tenga algo, y ese algo sea del tipo PlateKitchenObject:
+	- && player.GetKitchenObject() is PlateKitchenObject plateKitchenObject
+	- Si es asi, añadimos lo que haya actualmente a la lista, siempre que no este ya.
+	- Si se ha podido, borramos el objeto actual.
+
+Casos a mirar:
+	- Con plato podemos sacar pan
+	- Con plato podemos sacar carne (si no hay ya) de la cocina
+	- Podemos dejar ingredientes que lleva el player en un clear/cutting si hay un plato y no lleva ese ingrediente.
+
+Con todo esto, la gestion de platos parece completa.
+
+Solo falta añadir un algo para saber que lleva exactamente. Mostrar los iconos, vaya, que no siempre se ve facil.
+
+En el package manager vamos a instalar el "2d Sprite"
+
+Vamos a crear un Canvas en el Prefab del plato (World Space. medidas 1x0.65 en y=1)
+Dentro del canvas, le metemos un GridLayoutGroup, con cell Size 0.3 x 0.3 y spacint 0.05x0.05
+Dentro metemos un Objeto vacio y dentro de este otros dos, el primero uno llamado background y otro para el item.
+En ambos metemos un componente imagen, el primero con sprite Circle y el segundo con sprite pan, por ejemplo.
+Creamos prefab de esto. Y metemos 6 en el grid, se deberian ver todas genialmente posicionadas.
+Les cambiamos el visual segun haga falta, para cada uno segun corresponda.
+Le metemos el script FaceCamera.
+Creamos un Script PlateKitchenObjectUIVisual que haga lo mismo de activar o no que el PlateKitchenObjectVisual.
+(De hecho, podriamos usar el mismo exactamente)
+
+Fin de session. Video a 6:44:25

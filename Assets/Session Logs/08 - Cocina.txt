@@ -1,9 +1,3 @@
-Queremos que cueste un cierto numero de veces que se tenga que pulsar la accion secundaria para que corte algo.
-Ponemos en el cuttingCounter una variable que cuente y un maximo en la receta de corte.
-No hacemos el cambio de objeto si no se han cumplido los N cortes.
-
-Vamos a meterle una barra de progreso. Script ProgressBarUI con:
-    [SerializeField] private GameObject progressBar;
 Vamos con la cocina:
 Creamos una prefab variant del Base, le metemos los visuales de la cocina, el script de selected en el duplicado con su material...
 Creamos un script para la cocina StoveCounter y lo asignamos todo lo que es por defecto.

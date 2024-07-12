@@ -33,6 +33,16 @@ public class CuttingCounter : KitchenObjectParentAbstract {
             // Grab by player
             GetKitchenObject().SetKitchenObjectParent(player);
             progressBar.Deactivate();
+        } else if (HasKitchenObject() && player.HasKitchenObject() && player.GetKitchenObject() is PlateKitchenObject plateKitchenObject) {
+            // Grab by player with plate if we can
+            if (plateKitchenObject.TryAddIngredient(GetKitchenObject().GetKitchenObjectSO())) {
+                GetKitchenObject().DestroySelf();
+            }
+        } else if (HasKitchenObject() && player.HasKitchenObject() && GetKitchenObject() is PlateKitchenObject plateKitchenObject2) {
+            // Drop by player in a plate if we can
+            if (plateKitchenObject2.TryAddIngredient(player.GetKitchenObject().GetKitchenObjectSO())) {
+                player.GetKitchenObject().DestroySelf();
+            }
         }
     }
     public override void InteractAlternate(Player player) {
