@@ -1,0 +1,63 @@
+Vamos a darle al mostrador de entrega de comandas:
+
+Creamos una prefab variant del Base, le metemos los visuales del mostrador, el script de selected en el duplicado con su material...
+Hacemos un script igual que el de Trash, pero que solo rompa lo que lleva el player si es un plato.
+Quitamos el mesh Collider que viene de fabrica, nos va a estorbar.
+
+Para hacer la flecha que se mueve usaremos un shaderGraph.
+
+Creamos carpeta y usamos uno unlit. Le damos a doble clic y nos abre la ventana de config.
+En las propiedades necesitamos 2:
+ - BaseMap, para la textura (Texture2D)
+ - Speed, para la velocidad a la que se mueve la flecha (Vector2)
+
+Ahora lo divertido:
+ - Creamos Nodo Sample Texture 2D.
+   + Arrastramos la textura de propiedad y la metemos en Texture(T2)
+   + La salida RGBA(4), la llevamos a el nodo preexistente, Fragment, a Base Color(3). El A(1) a Alpha (Para las transparencias)
+ - En el Graph Inspector, le metemos Surface Type a Transparent
+ - Para que se mueva:
+   + Nodo UV conectado a Nodo Add (A) conectado Al SampleTexture en UV(2)
+   + Nodo Multiply con entradas Nodo Time -> Time(1) en A y La propiedad Speed en B. Se conecta al Add en B.
+- Seleccionamos las propiedades y ponemos valores por defecto:
+   + Arrow como textura
+   + x=1, y=0 como Speed.
+
+Creamos un material nuevo en su carpeta correspondiente, usando este shader.
+
+Dentro de la prefab, metemos un nuevo 3D -> Quad (posicion 0/1.256/0, rotacion 90/0/-90) y le metemos el material nuevo.
+
+
+Gestion de Entregas:
+
+Creamos un script DeliveryManager para que gestione las recetas que podemos entregar, lo metemos en una nueva prefab y de momento listo.
+Creamos un SO de recetas, que son una lista de ingredientes y un nombre de receta.
+Creamos unas pocas recetas. La simple, la queso, la vegana y la chamuscada, por ejemplo.
+Creamos otro SO que tenga una lista de recetas y las metemos todas en una sola instancia.
+Creamos una variable de editor con esa lista de recetas y la asignamos. Tambien un tiempo de spawn y un maximo de recetas en lista de espera.
+
+Añadimos una lista privada de recetas en espera de ser entregadas que nos han pedido en el delivery manager como variable de clase. 
+Lo mismo con el contador de tiempo de spawn y los inicializamos en el Start.
+
+En update miramos que no tengamos el maximo, que el contador pase mas que el maximo de espera y pillamos una al azar de la lista total:
+	- RecipeSO recipe = fullListOfRecipes.recipes[Random.Range(0, fullListOfRecipes.recipes.Count)];
+      waitingRecipeList.Add(recipe);
+
+Creamos funcion para entregar las comandas: public void DeliverRecipe(PlateKitchenObject plateKitchenObject)
+Para ello:
+ - Iteramos en todas las recetas de la lista de pendientes.
+ - Si la longitud de ingredientes es diferente con los del plato, descartamos. // Eficiente
+ - Si es igual, iteramos los ingredientes de la receta y dentro los del plato en un doble bucle (triple con la lista de pendientes).
+ - Tenemos que guardar un booleano que diga si hemos encontrado el ingrediente o no, en el bucle mas interno.
+ - Si no encontramos el ingrediente en la lista mas interna, pasamos a la siguiente receta.
+ - Si encontramos la receta, la borramos de la lista (waitingRecipeList.RemoveAt(i)) y el plato se autodestuye (plateKitchenObject.DestroySelf())
+
+Singletoneamos el Manager y lo llamamos desde el Mostrador de antes.
+
+Creamos un canvas, con su scaler a modo scale with screen size y medidas de referencia 1920x1024.
+Dentro creamos un GameObject DeliveryManagerUI, con RectTransform a stretchxstretch y todos los valores a 0.
+Creamos el script DeliveryManagerUI y se lo metemos.
+
+// PENDIENTE EL PARRADOTE DE LA UI DEL DELIVERY
+
+Fin de session. Video a 7:49:40
