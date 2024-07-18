@@ -54,10 +54,24 @@ Para ello:
 
 Singletoneamos el Manager y lo llamamos desde el Mostrador de antes.
 
-Creamos un canvas, con su scaler a modo scale with screen size y medidas de referencia 1920x1024.
-Dentro creamos un GameObject DeliveryManagerUI, con RectTransform a stretchxstretch y todos los valores a 0.
-Creamos el script DeliveryManagerUI y se lo metemos.
+// UI de la lista de comandas pendientes de hacer
 
-// PENDIENTE EL PARRADOTE DE LA UI DEL DELIVERY
+Vamos a crear 2 eventos, OnRecipeSpawned y OnRecipeCompleted en el delivery Manager. Los invocamos cuando generamos o cuando entregamos algo.
+Creamos un DeliveryManagerUI. Usaremos la "tecnica" de tener una plantilla y en cada evento recibido, pintarlo todo de nuevo.
+Creamos dos variables de editor para el contenedor y la plantilla.
+Nos suscribimos a los eventos mediante DeliveryManager.Instance.OnRecipeCompleted += ...... en ambos casos.
+En las funciones, llamamos a la misma funcion, UpdateVisual. Esta borra todos los hijos del contenedor menos la plantilla y los vuelve a instanciar (llamango al Manager para obtener la lista mas actual).
+Creamos otro script para el contenido individual de cada receta. Funcionara igual que la UI del contenido del plato.
+Cuando reinstanciamos, llamamos a la funcion que hace update de esta lista de ingredientes en la receta. (Y del nombre de esta)
+
+Creamos un canvas, con su scaler a modo scale with screen size y medidas de referencia 1920x1024.
+Dentro creamos un GameObject DeliveryManagerUI, con RectTransform a stretchxstretch y todos los valores a 0. Le metemos el script del mismo nombre.
+Creamos un hijo que sera el container del scriptUI, top-left, x200 y-550, w350 h860 con un componente Vertical Layout (spacing 20, alignment upper center).
+Creamos un hijo que sera la plantilla, w300 h200 (el resto lo posiciona el VerticalLayout). Con el script de contenido individual. Dentro le metemos:
+ - Una hijo con una imagen negra con el alpha a 142.
+ - Un hijo con el titulo de esta receta
+ - El contenedor de todos los iconos con el componente grid y todos los iconos como en el otro lado, pero le forzamos un maximo de 3 columnas.
+
+Todo deberia funcionar guai.
 
 Fin de session. Video a 7:49:40
