@@ -9,6 +9,7 @@ public class Player : KitchenObjectParentAbstract {
 
     private const float INTERACT_DISTANCE = 2.0f;
 
+    public static event EventHandler<SoundPositionEventArgs> OnPlayerPick;
     public event EventHandler OnSelectedCounterChange;
     public class OnSelectedCounterChangeEventArgs : EventArgs {
         public KitchenObjectParentAbstract selectedKitchenParent;
@@ -96,6 +97,15 @@ public class Player : KitchenObjectParentAbstract {
     private void OnInteractAlternateAction(object sender, EventArgs e) {
         if (selectedClearCounter) {
             selectedClearCounter.InteractAlternate(this);
+        }
+    }
+
+    public override void SetKichenObject(KitchenObject kitchenObject) {
+        base.SetKichenObject(kitchenObject);
+        if (kitchenObject != null) {
+            OnPlayerPick?.Invoke(this, new SoundPositionEventArgs {
+                position = transform.position
+            });
         }
     }
 }

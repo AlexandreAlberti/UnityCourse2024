@@ -15,6 +15,8 @@ public class DeliveryManager : MonoBehaviour
 
     public event EventHandler OnRecipeSpawned;
     public event EventHandler OnRecipeCompleted;
+    public event EventHandler<SoundPositionEventArgs> OnRecipeSuccess;
+    public event EventHandler<SoundPositionEventArgs> OnRecipeFailed;
 
     private List<RecipeSO> waitingRecipeList;
     private float spawnRecipeTimer;
@@ -42,7 +44,7 @@ public class DeliveryManager : MonoBehaviour
         OnRecipeSpawned?.Invoke(this, EventArgs.Empty);
     }
 
-    public void DeliverRecipe(PlateKitchenObject plateKitchenObject) {
+    public void DeliverRecipe(PlateKitchenObject plateKitchenObject, Vector3 counterPosition) {
         for(int i = 0; i < waitingRecipeList.Count; ++i) {
             RecipeSO recipe = waitingRecipeList[i];
             bool recipeValid = true;
@@ -66,9 +68,16 @@ public class DeliveryManager : MonoBehaviour
                 waitingRecipeList.RemoveAt(i);
                 plateKitchenObject.DestroySelf();
                 OnRecipeCompleted?.Invoke(this, EventArgs.Empty);
+                OnRecipeSuccess?.Invoke(this, new SoundPositionEventArgs {
+                    position = counterPosition
+                });
                 return;
             }
         }
+
+        OnRecipeFailed?.Invoke(this, new SoundPositionEventArgs {
+            position = counterPosition
+        });
     }
 
     public List<RecipeSO> GetRecipeWaitingList() {

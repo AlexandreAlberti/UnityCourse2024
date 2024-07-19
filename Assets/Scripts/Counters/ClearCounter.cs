@@ -1,8 +1,11 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class ClearCounter : KitchenObjectParentAbstract {
+
+    public static event EventHandler<SoundPositionEventArgs> OnPlayerDrop;
 
     public override void Interact(Player player)
     {
@@ -22,6 +25,15 @@ public class ClearCounter : KitchenObjectParentAbstract {
             if (plateKitchenObject2.TryAddIngredient(player.GetKitchenObject().GetKitchenObjectSO())) {
                 player.GetKitchenObject().DestroySelf();
             }
+        }
+    }
+
+    public override void SetKichenObject(KitchenObject kitchenObject) {
+        base.SetKichenObject(kitchenObject);
+        if (kitchenObject != null) {
+            OnPlayerDrop?.Invoke(this, new SoundPositionEventArgs {
+                position = transform.position
+            });
         }
     }
 }

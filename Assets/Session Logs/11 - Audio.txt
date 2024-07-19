@@ -1,0 +1,66 @@
+Vamos a añadir una musiquilla de fondo
+
+Cramos un gameobject (Music Manager) vacio en 0,0,0 y le metemos un audioSource de componente.
+Le metemos la musiquilla en Audiosource (el fichero llamado Music), Con play on Awake y loop activados. 
+Prioridad a 0 y volumen a 0.5. Spatial Blend a 0 (2D) para que se oya bien en todo el sitio.
+
+Ahora vamos con los efectos de sonido.
+
+Creamos un SO para meter todos los sonidos como AudioClip. Usamos [] para los que tienen mas de uno, cremos una instancia y lo llenamos:
+    public AudioClip[] deliverySuccess;
+    public AudioClip[] deliveryFailed;
+    public AudioClip[] chopping;
+    public AudioClip[] footsteps;
+    public AudioClip[] objectDrop;
+    public AudioClip[] objectPick;
+    public AudioClip stoveSizzle;
+    public AudioClip[] trash;
+    public AudioClip[] warning;
+
+Creamos una clase a parte que servira para todos los eventos de sonido: 
+    public class SoundPositionEventArgs : EventArgs {
+        public Vector3 position;
+    }
+
+Cramos un gameobject (Sounds Manager) vacio en 0,0,0 con su script pertinente, una variable de editor para el SoundsSO y la llenamos con el script anterior.
+La hacemos singleton y creamos una funcion:
+    private void PlaySound(AudioClip clip, Vector3 position, float volume = 1.0f) {
+        AudioSource.PlayClipAtPoint(clip, position, volume);
+    }
+Creamos eventos (con args SoundPositionEventArgs) para cuando la receta se entrega bien y nos suscribimos, pasando como clip un random del array y la posicion del args.
+TIP: Añadimos un parametro vector3 a DeliverRecipe del Manager, que sera la transform.position del counter.
+
+Hacemos lo mismo con el CuttingCounter y el chop (pero con el evento como static, para no tener que linkar nada)
+TIP: "CuttingCounter.OnAnyCut += OnCut;"
+
+Hacemos lo mismo que con el cutting para el trash.
+Para el player el pick (funcion SetKitchenObject que en el padre las haremos virtual) las reimplementamos en el player:
+    public override void SetKichenObject(KitchenObject kitchenObject) {
+        base.SetKichenObject(kitchenObject);
+        if (kitchenObject != null) {
+            OnPlayerPick?.Invoke(this, new SoundPositionEventArgs {
+                position = transform.position
+            });
+        }
+    }
+Para el ClearCounter y el CuttingCounter el drop (igual que el del player).
+
+Para la cocina, le metemos el sonido como en la musiquilla de fondo, pero 100% 3D, con loop y sin StartOnAwake. Creamos un Script Como el Visual y llamamos al Clip Play/Pause
+    void OnStateChanged(object sender, StoveCounter.OnStateChangedEventArgs args) {
+        switch (args.state) {
+            case StoveCounter.Status.BURNING:
+            case StoveCounter.Status.COOKING:
+                audioSource.Play();
+                break;
+            case StoveCounter.Status.STOPPED:
+            default:
+                audioSource.Pause();
+                break;
+        }
+    }
+El warning nos iremos en la session de pulido mas adelante.
+
+Para los pasos, haremos un PlayerSounds (que metemos a la prefab del player, a la raiz).
+En el Update, si el player esta caminando y luego cada 0.25 tiempo, llame al soundsManager para que haga play de un sonido de footstep.
+
+Fin de session. Video a 8:06:17

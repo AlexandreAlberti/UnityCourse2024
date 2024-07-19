@@ -12,7 +12,7 @@ public class KitchenObjectParentAbstract : MonoBehaviour, IKitchenObjectParent
         return kitchenObjectPlacePoint;
     }
 
-    public void SetKichenObject(KitchenObject kitchenObject) {
+    public virtual void SetKichenObject(KitchenObject kitchenObject) {
         this.kitchenObject = kitchenObject;
     }
 
@@ -20,7 +20,7 @@ public class KitchenObjectParentAbstract : MonoBehaviour, IKitchenObjectParent
         return kitchenObject;
     }
 
-    public void ClearKitchenObject() {
+    public virtual void ClearKitchenObject() {
         kitchenObject = null;
     }
 

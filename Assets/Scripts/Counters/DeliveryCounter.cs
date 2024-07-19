@@ -7,7 +7,7 @@ public class DeliveryCounter : KitchenObjectParentAbstract {
     public override void Interact(Player player) {
         if (player.HasKitchenObject() && player.GetKitchenObject() is PlateKitchenObject plateKitchenObject) {
             // Delete Grabbed plate by player
-            DeliveryManager.Instance.DeliverRecipe(plateKitchenObject);
+            DeliveryManager.Instance.DeliverRecipe(plateKitchenObject, transform.position);
         }
     }
 }

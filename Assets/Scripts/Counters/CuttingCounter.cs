@@ -10,6 +10,8 @@ public class CuttingCounter : KitchenObjectParentAbstract {
     [SerializeField] private ProgressBarUI progressBar;
 
     public event EventHandler OnPlayerCut;
+    public static event EventHandler<SoundPositionEventArgs> OnAnyCut;
+    public static event EventHandler<SoundPositionEventArgs> OnPlayerDrop;
 
     private float cuttingProgress;
 
@@ -55,6 +57,9 @@ public class CuttingCounter : KitchenObjectParentAbstract {
             if (recipe) {
                 cuttingProgress++;
                 OnPlayerCut?.Invoke(this, EventArgs.Empty);
+                OnAnyCut?.Invoke(this, new SoundPositionEventArgs {
+                    position = transform.position
+                });
                 progressBar.ProgressUpdate(cuttingProgress/recipe.necessaryCutsToPerform);
 
                 if (cuttingProgress >= recipe.necessaryCutsToPerform) {
@@ -85,5 +90,13 @@ public class CuttingCounter : KitchenObjectParentAbstract {
             }
         }
         return null;
+    }
+    public override void SetKichenObject(KitchenObject kitchenObject) {
+        base.SetKichenObject(kitchenObject);
+        if (kitchenObject != null) {
+            OnPlayerDrop?.Invoke(this, new SoundPositionEventArgs {
+                position = transform.position
+            });
+        }
     }
 }
