@@ -1,0 +1,52 @@
+Vamos a añadir un contador para no empezar tan a saco
+
+Creamos un objeto GameManager con su script, haciendo que sea singleton.
+Crear una enum privada con los estados, Previa, Cuenta atras, Partida, game over.
+Como parametros de editor: tiempo de espera, tiempo del contador, tiempo de partida
+Añadir Variables de control de esos tiempos inicializadas debidamente en Awake/Start y una para el estado (la enum que hemos creado) que empieza en Previa.
+En el Update, hacer un switch con cada caso y que vaya saltando con los timers al estado siguiente, poniendo los temporizadores del estado siguiente al valor inicial que toque.
+Creamos una funcion publica que devuelva si el estado == Partida. En el Player
+Para prohibir las acciones mientras no se está en juego, en el Player, le metemos a los eventos de acciones (Y en el Update si queremos que no se mueva), como primera linea:
+        if (!GameManager.Instance.IsGamePlaying()) { return; }
+De esta manera, si pulsamos algo, si el juego no está en Partida, lo ignora.
+
+Vamos a por los visuales:
+En el canvas, metemos otro hijo, llamado GameStartCountdownUI, con un Texto bien centrado a tamaño 250
+Creamos un script para este: GameStartCountdownUI
+Le metemos una referencia TextMeshProUGUI para el numero de cuentra atrás y otra para un mensaje de START y las linkamos.
+
+El countador estará activo solo en la fase de countdown, mientras que el start solo tiene que durar 1s desde que empieza la fase de Jugar.
+
+Metemos un evento en el GameManager cada vez que cambie de estado (dentro del switch) y nos suscribimos:
+    private void OnStateChanged(object sender, GameManager.GameState state) {
+        isCountdownEnabled = state == GameManager.GameState.CountDown;
+        countdownText.enabled = isCountdownEnabled;
+        startTextTimer = 0.0f;
+        isShowingStartTextEnabled = state == GameManager.GameState.Playing;
+    }
+
+    private void Update() {
+        if (isShowingStartTextEnabled) {
+            startTextTimer += Time.deltaTime;
+            isShowingStartTextEnabled = startTextTimer < startTextTimerMax;
+            startText.enabled = isShowingStartTextEnabled;
+        }
+
+        if (!isCountdownEnabled) {
+            return;
+        }
+        int remainingCountDown = GameManager.Instance.GetRemainingCountdownCeil();
+        countdownText.text = remainingCountDown.ToString();
+    }
+Con esto ya tenemos el proceso de inicio de la partida.
+
+Para la pantalla de Game Over, ponemos otro hijo al canvas (que llevara el script), un contenedor con imagen negra con transparencia.
+Un texto de Game Over y otro texto de Ordenes completadas, a su lado el texto con un numero.
+En el script con variable de editor queremos el contenedor y el texto del numero de comandas.
+En el cambio de estado, si es game over, activamos el contenedor (por defecto estara desactivado) y leemos el valor del DeliveryManager.
+
+Siguiendo el mismo estilo, vamos a meter un "reloj" que cuente el tiempo que queda en la partida.
+
+Nota: En todos los numeritos que pongamos, o metemos el valor de inicio correcto, o no escribimos nada, ya que sino se activa en un frame y se actualiza en otro y se ve raro.
+
+Fin de session. Video a 8:30:14

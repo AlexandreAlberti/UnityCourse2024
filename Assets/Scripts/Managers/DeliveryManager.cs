@@ -20,11 +20,13 @@ public class DeliveryManager : MonoBehaviour
 
     private List<RecipeSO> waitingRecipeList;
     private float spawnRecipeTimer;
+    private int recipesDelivered;
 
     private void Awake() {
         Instance = this;
         waitingRecipeList = new List<RecipeSO>();
         spawnRecipeTimer = 0.0f;
+        recipesDelivered = 0;
     }
 
     private void Update() {
@@ -71,6 +73,7 @@ public class DeliveryManager : MonoBehaviour
                 OnRecipeSuccess?.Invoke(this, new SoundPositionEventArgs {
                     position = counterPosition
                 });
+                recipesDelivered++;
                 return;
             }
         }
@@ -82,5 +85,9 @@ public class DeliveryManager : MonoBehaviour
 
     public List<RecipeSO> GetRecipeWaitingList() {
         return waitingRecipeList;
+    }
+
+    public int GetRecipesDelivered() {
+        return recipesDelivered;
     }
 }

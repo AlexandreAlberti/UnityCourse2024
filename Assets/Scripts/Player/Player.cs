@@ -38,6 +38,7 @@ public class Player : KitchenObjectParentAbstract {
     }
 
     private void Update() {
+        // if (!GameManager.Instance.IsGamePlaying()) { return; }
         HandleMovement();
         HandleInteractions();
     }
@@ -89,12 +90,14 @@ public class Player : KitchenObjectParentAbstract {
     }
 
     private void OnInteractAction(object sender, EventArgs e) {
+        if (!GameManager.Instance.IsGamePlaying()) { return; }
         if (selectedClearCounter) {
             selectedClearCounter.Interact(this);
         }
     }
 
     private void OnInteractAlternateAction(object sender, EventArgs e) {
+        if (!GameManager.Instance.IsGamePlaying()) { return; }
         if (selectedClearCounter) {
             selectedClearCounter.InteractAlternate(this);
         }
