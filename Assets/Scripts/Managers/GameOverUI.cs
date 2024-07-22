@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
-public class GameOcerUI : MonoBehaviour {
+public class GameOverUI : MonoBehaviour {
     [SerializeField] private GameObject container;
     [SerializeField] private TextMeshProUGUI amountOrdersText;
 

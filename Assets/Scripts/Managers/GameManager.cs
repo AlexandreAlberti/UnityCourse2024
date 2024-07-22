@@ -1,3 +1,4 @@
+using MainMenu;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -25,6 +26,7 @@ public class GameManager : MonoBehaviour {
     private float waitToStartTimer;
     private float countdownTimer;
     private float playTimer;
+    private bool paused;
 
     private void Awake() {
         Instance = this;
@@ -32,9 +34,24 @@ public class GameManager : MonoBehaviour {
         waitToStartTimer = 0.0f;
         countdownTimer = countdownTimerMax;
         playTimer = playTimerMax;
+        paused = false;
+    }
+
+    private void Start() {
+        StartCoroutine(FaderManager.Instance.MakeFaderDisappear());
+        GameInput.Instance.OnPauseAction += OnPauseAction;
+    }
+
+    public void OnPauseAction(object sender, EventArgs e) {
+        paused = !paused;
+        Time.timeScale = paused ? 0 : 1;
     }
 
     private void Update() {
+        if (paused) {
+            return;
+        }
+
         switch (gameState) {
             case GameState.WaitingToStart:
                 waitToStartTimer += Time.deltaTime;

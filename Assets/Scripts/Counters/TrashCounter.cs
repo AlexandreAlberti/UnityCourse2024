@@ -7,6 +7,10 @@ public class TrashCounter : KitchenObjectParentAbstract {
 
     public static event EventHandler<SoundPositionEventArgs> OnAnyTrash;
 
+    public static void ResetStaticData() {
+        OnAnyTrash = null;
+    }
+
     public override void Interact(Player player) {
         if (player.HasKitchenObject()) {
             // Delete Grabbed Item by player

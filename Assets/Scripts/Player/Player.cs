@@ -1,6 +1,4 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Player : KitchenObjectParentAbstract {
@@ -11,13 +9,17 @@ public class Player : KitchenObjectParentAbstract {
 
     public static event EventHandler<SoundPositionEventArgs> OnPlayerPick;
     public event EventHandler OnSelectedCounterChange;
+
+    public static void ResetStaticData() {
+        OnPlayerPick = null;
+    }
+
     public class OnSelectedCounterChangeEventArgs : EventArgs {
         public KitchenObjectParentAbstract selectedKitchenParent;
     }
 
     [SerializeField] private float moveSpeed;
     [SerializeField] private float rotationSpeed;
-    [SerializeField] private GameInput input;
     [SerializeField] private LayerMask countersLayer;
 
     private bool isWalking;
@@ -33,12 +35,15 @@ public class Player : KitchenObjectParentAbstract {
     }
 
     private void Start() {
-        input.OnInteractAction += OnInteractAction;
-        input.OnInteractAlternateAction += OnInteractAlternateAction;
+        GameInput.Instance.OnInteractAction += OnInteractAction;
+        GameInput.Instance.OnInteractAlternateAction += OnInteractAlternateAction;
     }
 
     private void Update() {
-        // if (!GameManager.Instance.IsGamePlaying()) { return; }
+        if (!GameManager.Instance.IsGamePlaying()) {
+            return; 
+        }
+
         HandleMovement();
         HandleInteractions();
     }
@@ -48,7 +53,7 @@ public class Player : KitchenObjectParentAbstract {
     }
 
     private void HandleMovement() {
-        Vector2 inputVector = input.GetMovementVectorNormalized();
+        Vector2 inputVector = GameInput.Instance.GetMovementVectorNormalized();
 
         Vector3 moveDir = new Vector3(inputVector.x, 0.0f, inputVector.y);
         transform.position += moveDir * moveSpeed * Time.deltaTime;
@@ -59,7 +64,7 @@ public class Player : KitchenObjectParentAbstract {
     }
 
     private void HandleInteractions() {
-        Vector2 inputVector = input.GetMovementVectorNormalized();
+        Vector2 inputVector = GameInput.Instance.GetMovementVectorNormalized();
         Vector3 moveDir = new Vector3(inputVector.x, 0.0f, inputVector.y);
 
         if (isWalking) {

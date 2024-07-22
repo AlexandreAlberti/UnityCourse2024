@@ -7,6 +7,10 @@ public class ClearCounter : KitchenObjectParentAbstract {
 
     public static event EventHandler<SoundPositionEventArgs> OnPlayerDrop;
 
+    public static void ResetStaticData() {
+        OnPlayerDrop = null;
+    }
+
     public override void Interact(Player player)
     {
         if (!HasKitchenObject() && player.HasKitchenObject()) {

@@ -13,6 +13,11 @@ public class CuttingCounter : KitchenObjectParentAbstract {
     public static event EventHandler<SoundPositionEventArgs> OnAnyCut;
     public static event EventHandler<SoundPositionEventArgs> OnPlayerDrop;
 
+    public static void ResetStaticData() {
+        OnAnyCut = null;
+        OnPlayerDrop = null;
+    }
+
     private float cuttingProgress;
 
     private void Start() {
