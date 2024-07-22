@@ -53,4 +53,4 @@ Creamos un script para hacer reset de todo lo estatico (Eventos del Player, Tras
 Llamamos a todas en el Awake.
 Creamos un Objeto en el mainmenu con esto script (asi limpiamos todas las cosas para volver a empezar la partida limpiamente)
 
-Fin de session. Video a 8:30:14
+Fin de session. Video a 9:07:20
