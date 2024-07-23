@@ -1,56 +1,38 @@
-Vamos a añadir un Menu`Principal para que sea bonito.
+Vamos a añadir un Menu de Opciones para gestionar volumen de musica.
 
-Creamos una escena nueva. Añadimos canvas como los de la UI normal, fullHd, etc.
-Añadimos la escena a la build property y movemos el GameScene para que tenga indice 1. Dejamos el 0 para el menu principal.
-Importamos el paquete del fader para que la transicion sea mas suave. 
-Reordenamos un poco los imports para que se integren bien en nuestro proyecto.
+Creamos un menu con la misma disposicion del GamePaused.
+Dejamos solo el boton de autocerrarse. 
+Añadimos un texto, un scrollbar y el texto como valor (un trio para la musica y otro para los efectos de sonido o sfx).
+En el GamePausedUI, metemos dos variables de editor mas, una ara el container nuevo y un boton de entrar a las opciones.
+En el evento del boton, hacemos SetActive(true) del contenedor y metemos un false si se quita la pausa en el OnPauseAction.
+En el SoundManager, añadimos el AudioSource de la musica y lo vinculamos.
+Creamos dos public static string para las KEYS donde guardaremos los volumenes.
+Metemos una variable privada, en el Start con el valor actual de los sfx:
+        sfxVolume = PlayerPrefs.GetFloat(SFX_VOLUME, 0.75f);
+        music.volume = PlayerPrefs.GetFloat(MUSIC_VOLUME, 1.0f);
+Creamos dos metodos de cambio de volumen:
+    public void ChangeMusicVolume(float newMusicVolume) {
+        PlayerPrefs.SetFloat(MUSIC_VOLUME, newMusicVolume);
+        music.volume = newMusicVolume;
+    }
+    public void ChangeSFXVolume(float newSfxVolume) {
+        sfxVolume = newSfxVolume;
+        PlayerPrefs.SetFloat(SFX_VOLUME, sfxVolume);
+    }
+Cambiamos el PlaySound para que use el volumen de la variable.
 
-Añadimos el logo como elemento de UI y 2 botones para empezar y salir. Creamos un script para el MainMenuUI:
-    private void Awake() {
-        playButton.onClick.AddListener(() => {
-            // PlayGame code
-            StartCoroutine(LoadGameScene());
+Hacemos un script OptionsUI, con sus variables de editor de los textos del valor del audio/sfx, las scrollbars, su container y su boton de cerrar.
+Con el boton de cerrar, desactibamos el container.
+Con los scrollbars, onValueChanged, llamamos al SoundsManager en el ChangeVolume que toque y actualizamos el valor del texto redondeando * 10:
+        musicScrollbar.onValueChanged.AddListener(newValue => {
+            SoundsManager.Instance.ChangeMusicVolume(newValue);
+            musicText.text = Mathf.CeilToInt(newValue * 10).ToString();
+        });
+        sfxScrollbar.onValueChanged.AddListener(newValue => {
+            SoundsManager.Instance.ChangeSFXVolume(newValue);
+            sfxText.text = Mathf.CeilToInt(newValue * 10).ToString();
         });
 
-        quitButton.onClick.AddListener(() => {
-            // Quit code
-            Application.Quit();
-        });
-    }
+En el start, desactivamos, pillamos el valor del PlayerPrefs, actualizamos texto y barra y volvemos a activar. Asi no se lanzará ningun evento.
 
-    public IEnumerator LoadGameScene() {
-        yield return FaderManager.Instance.MakeFaderAppear();
-        yield return FaderManager.Instance.MakeLoadingScreen();
-        yield return SceneManager.LoadSceneAsync(1);
-    }
-
-En el GameManager, cuando entramos, tenemos que llamar en Start: StartCoroutine(FaderManager.Instance.MakeFaderDisappear())
-Tambien metemos la prefab en el game scene. 
-
-Vamos ahora con el boton de pausa que nos permita salir o tocar algunas opciones.
-
-Mapeamos el boton de Start al Enter Y gamepad Start. Lanzamos el evento en GameInput (volvemos esta Singleton y arreglamos el player). 
-Lo escuchamos en el GameManager. Metemos el Time.timeScale a 0 o 1, segun pausamos o despausamos:
-    paused = !paused;
-    Time.timeScale = paused ? 0 : 1;
-Creamos otro apartado de la UI en el canvas de la game scene, con un container y dentro un background semiopaco que lo ocupe todo y un texto de PAUSA
-Hacemos un script GamePauseUI que se va a suscribir igual, con un SetActive del container.
-Le metemos un Boton para volver al Menu principal y otro para quitar la pausa al clicar.
-En las funciones de dentro, Llamamos al "GameManager.Instance.OnPauseAction", en el caso el volver al menu, nos des-suscribimos al evento del GameInput.
-En el despausa, llamamos a la misma funcion con parametros fake, en el manu, hacemos un LoadScene(0).
-Hacemos el GameInput Singleton total:
-    private void Awake() {
-        if (Instance == null) {
-         // CODIGO ANTERIOR AQUI DENTRO
-        } else {
-            Destroy(this);
-        }
-    }
-Creamos un script para hacer reset de todo lo estatico (Eventos del Player, Trash, Cutting y Clear):
-    public static void ResetStaticData() {
-        OnPlayerDrop = null;
-    }
-Llamamos a todas en el Awake.
-Creamos un Objeto en el mainmenu con esto script (asi limpiamos todas las cosas para volver a empezar la partida limpiamente)
-
-Fin de session. Video a 9:07:20
+Fin de session. Video a 9:22:20

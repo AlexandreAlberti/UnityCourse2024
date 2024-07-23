@@ -4,8 +4,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class OptionsUI : MonoBehaviour
-{
+public class OptionsUI : MonoBehaviour {
     [SerializeField] private Scrollbar musicScrollbar;
     [SerializeField] private TextMeshProUGUI musicText;
     [SerializeField] private Scrollbar sfxScrollbar;
@@ -23,35 +22,21 @@ public class OptionsUI : MonoBehaviour
             sfxText.text = Mathf.CeilToInt(newValue * 10).ToString();
         });
         closeOptionsButton.onClick.AddListener(() => {
-               optionsContainer.SetActive(false);
+            optionsContainer.SetActive(false);
         });
-        musicScrollbar.enabled = false;
-        sfxScrollbar.enabled = false;
     }
 
     private void Start() {
         musicScrollbar.enabled = false;
         sfxScrollbar.enabled = false;
 
+        float sfx = PlayerPrefs.GetFloat(SoundsManager.SFX_VOLUME, 0.75f);
+        sfxText.text = Mathf.CeilToInt(sfx * 10).ToString();
+        sfxScrollbar.value = sfx;
 
-        if (PlayerPrefs.HasKey(SoundsManager.SFX_VOLUME)) {
-            float value = PlayerPrefs.GetFloat(SoundsManager.SFX_VOLUME);
-            sfxText.text = Mathf.CeilToInt(value * 10).ToString();
-            sfxScrollbar.value = value;
-        } else {
-            sfxText.text = "5";
-            sfxScrollbar.value = 0.5f;
-        }
-
-
-        if (PlayerPrefs.HasKey(SoundsManager.MUSIC_VOLUME)) {
-            float value = PlayerPrefs.GetFloat(SoundsManager.MUSIC_VOLUME);
-            musicText.text = Mathf.CeilToInt(value * 10).ToString();
-            musicScrollbar.value = value;
-        } else {
-            musicText.text = "10";
-            musicScrollbar.value = 1;
-        }
+        float music = PlayerPrefs.GetFloat(SoundsManager.MUSIC_VOLUME, 1.0f);
+        musicText.text = Mathf.CeilToInt(music * 10).ToString();
+        musicScrollbar.value = music;
 
         musicScrollbar.enabled = true;
         sfxScrollbar.enabled = true;

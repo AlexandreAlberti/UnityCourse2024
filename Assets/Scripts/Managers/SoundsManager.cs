@@ -11,13 +11,10 @@ public class SoundsManager : MonoBehaviour
     public static string MUSIC_VOLUME = "Music_Volume";
     public static string SFX_VOLUME = "Sfx_Volume";
 
-    private float musicVolume;
     private float sfxVolume;
 
     private void Awake() {
         Instance = this;
-        sfxVolume = 1.0f;
-        musicVolume = 0.5f;
     }
 
     private void Start() {
@@ -29,20 +26,13 @@ public class SoundsManager : MonoBehaviour
         ClearCounter.OnPlayerDrop += OnDrop;
         CuttingCounter.OnPlayerDrop += OnDrop;
 
-        if (PlayerPrefs.HasKey(SFX_VOLUME)) {
-            sfxVolume = PlayerPrefs.GetFloat(SFX_VOLUME);
-        }
-        if (PlayerPrefs.HasKey(MUSIC_VOLUME)) {
-            musicVolume = PlayerPrefs.GetFloat(MUSIC_VOLUME);
-        }
-
-        music.volume = musicVolume;
+        sfxVolume = PlayerPrefs.GetFloat(SFX_VOLUME, 0.75f);
+        music.volume = PlayerPrefs.GetFloat(MUSIC_VOLUME, 1.0f);
     }
 
     public void ChangeMusicVolume(float newMusicVolume) {
-        musicVolume = newMusicVolume;
-        PlayerPrefs.SetFloat(MUSIC_VOLUME, musicVolume);
-        music.volume = musicVolume;
+        PlayerPrefs.SetFloat(MUSIC_VOLUME, newMusicVolume);
+        music.volume = newMusicVolume;
     }
     public void ChangeSFXVolume(float newSfxVolume) {
         sfxVolume = newSfxVolume;
