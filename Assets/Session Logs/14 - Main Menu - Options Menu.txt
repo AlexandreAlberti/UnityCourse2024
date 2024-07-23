@@ -35,4 +35,23 @@ Con los scrollbars, onValueChanged, llamamos al SoundsManager en el ChangeVolume
 
 En el start, desactivamos, pillamos el valor del PlayerPrefs, actualizamos texto y barra y volvemos a activar. Asi no se lanzará ningun evento.
 
+Video a 9:22:20
+NOS SALTAMOS LA PARTE DE REBINDING (Reasignar valores a los inputs)
+Video a 9:45:40
+
+Ahora queremos poder navegar por los menus con el gamepad.
+Primero añadamos un DeadZone a las PlayerInputActions del Joystick.
+En el GameScene, EventSystem, nos dara un warning en el StandaloneInputSystem, clicamos en el boton que nos da y se cambiara a InputSystemUIInputModule
+Buscamos todos los botones que hemos hecho, le metemos un selected Color en verdecino (47DB22).
+En el Paused, pillamos un boton y lo seleccionamos en el OnPauseAction, si entramos en pausa.
+Lo mismo cuando abrimos el Options Menu, creamos una funcion de OpenOptions donde seleccionamos uno de ellos.
+Tambien una CloseOptions y las llamamos desde el pause menu, cambiando gameObject por el tipo del menu.
+
+El movimiento por el menu que tiene Unity por defecto, va por todos los botones que se muestran en pantalla. Miramos de que cuando se abran las opciones, se cierre la pausa y viceversa.
+Creamos un evento para cuando cerramos desde el menu de opciones, que el pause se pueda reactivar, pero el evento lo llamamos solo en la accion del boton de cerrar.
+
+Para el menu principal tan solo necesitamos marcar por defecto el boton de play en el EventSystem -> First Selected. Y añadimos el color de selected.
+
+NOTA: Para el pause el Enter no sirve, ya que interfiere con el movimiento por los menus por defecto. Mejor usar ESCAPE o otra.
+
 Fin de session. Video a 9:22:20

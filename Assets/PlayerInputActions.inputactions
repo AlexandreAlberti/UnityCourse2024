@@ -158,7 +158,7 @@
                     "id": "e87e2cb8-094a-4d0b-8b2b-b8c0fc5bb0c3",
                     "path": "<Gamepad>/leftStick",
                     "interactions": "",
-                    "processors": "NormalizeVector2",
+                    "processors": "StickDeadzone(min=0.5),NormalizeVector2",
                     "groups": "",
                     "action": "Move",
                     "isComposite": false,
@@ -233,7 +233,7 @@
                 {
                     "name": "",
                     "id": "cb05c302-0a68-4c2f-9e75-d28949caa82e",
-                    "path": "<Keyboard>/enter",
+                    "path": "<Keyboard>/escape",
                     "interactions": "",
                     "processors": "",
                     "groups": "",

@@ -10,7 +10,7 @@ using UnityEngine.UI;
 public class GamePausedUI : MonoBehaviour
 {
     [SerializeField] private GameObject _pauseMenu;
-    [SerializeField] private GameObject _optionsMenu;
+    [SerializeField] private OptionsUI _optionsMenu;
     [SerializeField] private Button _resumeButton;
     [SerializeField] private Button _mainMenuButton;
     [SerializeField] private Button _optionsButton;
@@ -20,6 +20,7 @@ public class GamePausedUI : MonoBehaviour
     private void Start() {
         paused = false;
         GameInput.Instance.OnPauseAction += OnPauseAction;
+        _optionsMenu.OnCloseMenu += OnClosedOptionsAction;
 
         _mainMenuButton.onClick.AddListener(() => {
             GameManager.Instance.OnPauseAction(this, EventArgs.Empty);
@@ -30,18 +31,27 @@ public class GamePausedUI : MonoBehaviour
             GameManager.Instance.OnPauseAction(this, EventArgs.Empty);
             OnPauseAction(this, EventArgs.Empty);
         });
+
         _pauseMenu.SetActive(paused);
 
         _optionsButton.onClick.AddListener(() => {
-            _optionsMenu.SetActive(true);
+            _pauseMenu.SetActive(false);
+            _optionsMenu.OpenMenu();
         });
+    }
+
+    private void OnClosedOptionsAction(object sender, EventArgs e) {
+        _pauseMenu.SetActive(true);
+        _optionsButton.Select();
     }
 
     private void OnPauseAction(object sender, EventArgs e) {
         paused = !paused;
         _pauseMenu.SetActive(paused);
         if (!paused) {
-            _optionsMenu.SetActive(false);
+            _optionsMenu.CloseMenu();
+        } else {
+            _optionsButton.Select();
         }
     }
 }

@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -12,6 +13,8 @@ public class OptionsUI : MonoBehaviour {
     [SerializeField] private Button closeOptionsButton;
     [SerializeField] private GameObject optionsContainer;
 
+    public EventHandler OnCloseMenu;
+
     private void Awake() {
         musicScrollbar.onValueChanged.AddListener(newValue => {
             SoundsManager.Instance.ChangeMusicVolume(newValue);
@@ -22,7 +25,8 @@ public class OptionsUI : MonoBehaviour {
             sfxText.text = Mathf.CeilToInt(newValue * 10).ToString();
         });
         closeOptionsButton.onClick.AddListener(() => {
-            optionsContainer.SetActive(false);
+            CloseMenu();
+            OnCloseMenu?.Invoke(this, EventArgs.Empty);
         });
     }
 
@@ -40,5 +44,14 @@ public class OptionsUI : MonoBehaviour {
 
         musicScrollbar.enabled = true;
         sfxScrollbar.enabled = true;
+    }
+
+    public void OpenMenu() {
+        optionsContainer.SetActive(true);
+        closeOptionsButton.Select();
+    }
+
+    public void CloseMenu() {
+        optionsContainer.SetActive(false);
     }
 }
