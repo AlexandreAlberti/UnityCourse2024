@@ -10,8 +10,10 @@ using UnityEngine.UI;
 public class GamePausedUI : MonoBehaviour
 {
     [SerializeField] private GameObject _pauseMenu;
+    [SerializeField] private GameObject _optionsMenu;
     [SerializeField] private Button _resumeButton;
     [SerializeField] private Button _mainMenuButton;
+    [SerializeField] private Button _optionsButton;
 
     private bool paused;
 
@@ -29,10 +31,17 @@ public class GamePausedUI : MonoBehaviour
             OnPauseAction(this, EventArgs.Empty);
         });
         _pauseMenu.SetActive(paused);
+
+        _optionsButton.onClick.AddListener(() => {
+            _optionsMenu.SetActive(true);
+        });
     }
 
     private void OnPauseAction(object sender, EventArgs e) {
         paused = !paused;
         _pauseMenu.SetActive(paused);
+        if (!paused) {
+            _optionsMenu.SetActive(false);
+        }
     }
 }

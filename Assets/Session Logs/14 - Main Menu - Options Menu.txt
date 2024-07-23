@@ -1,0 +1,56 @@
+Vamos a añadir un Menu`Principal para que sea bonito.
+
+Creamos una escena nueva. Añadimos canvas como los de la UI normal, fullHd, etc.
+Añadimos la escena a la build property y movemos el GameScene para que tenga indice 1. Dejamos el 0 para el menu principal.
+Importamos el paquete del fader para que la transicion sea mas suave. 
+Reordenamos un poco los imports para que se integren bien en nuestro proyecto.
+
+Añadimos el logo como elemento de UI y 2 botones para empezar y salir. Creamos un script para el MainMenuUI:
+    private void Awake() {
+        playButton.onClick.AddListener(() => {
+            // PlayGame code
+            StartCoroutine(LoadGameScene());
+        });
+
+        quitButton.onClick.AddListener(() => {
+            // Quit code
+            Application.Quit();
+        });
+    }
+
+    public IEnumerator LoadGameScene() {
+        yield return FaderManager.Instance.MakeFaderAppear();
+        yield return FaderManager.Instance.MakeLoadingScreen();
+        yield return SceneManager.LoadSceneAsync(1);
+    }
+
+En el GameManager, cuando entramos, tenemos que llamar en Start: StartCoroutine(FaderManager.Instance.MakeFaderDisappear())
+Tambien metemos la prefab en el game scene. 
+
+Vamos ahora con el boton de pausa que nos permita salir o tocar algunas opciones.
+
+Mapeamos el boton de Start al Enter Y gamepad Start. Lanzamos el evento en GameInput (volvemos esta Singleton y arreglamos el player). 
+Lo escuchamos en el GameManager. Metemos el Time.timeScale a 0 o 1, segun pausamos o despausamos:
+    paused = !paused;
+    Time.timeScale = paused ? 0 : 1;
+Creamos otro apartado de la UI en el canvas de la game scene, con un container y dentro un background semiopaco que lo ocupe todo y un texto de PAUSA
+Hacemos un script GamePauseUI que se va a suscribir igual, con un SetActive del container.
+Le metemos un Boton para volver al Menu principal y otro para quitar la pausa al clicar.
+En las funciones de dentro, Llamamos al "GameManager.Instance.OnPauseAction", en el caso el volver al menu, nos des-suscribimos al evento del GameInput.
+En el despausa, llamamos a la misma funcion con parametros fake, en el manu, hacemos un LoadScene(0).
+Hacemos el GameInput Singleton total:
+    private void Awake() {
+        if (Instance == null) {
+         // CODIGO ANTERIOR AQUI DENTRO
+        } else {
+            Destroy(this);
+        }
+    }
+Creamos un script para hacer reset de todo lo estatico (Eventos del Player, Trash, Cutting y Clear):
+    public static void ResetStaticData() {
+        OnPlayerDrop = null;
+    }
+Llamamos a todas en el Awake.
+Creamos un Objeto en el mainmenu con esto script (asi limpiamos todas las cosas para volver a empezar la partida limpiamente)
+
+Fin de session. Video a 9:07:20
