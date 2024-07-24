@@ -6,6 +6,8 @@ using UnityEngine;
 using UnityEngine.UIElements;
 
 public class StoveCounter : KitchenObjectParentAbstract {
+
+    private static float WARNING_TIMER_MAX = 0.25f;
     public enum Status {
         STOPPED, COOKING, BURNING
     }
@@ -21,6 +23,7 @@ public class StoveCounter : KitchenObjectParentAbstract {
 
     private float cookingProgress;
     private float burningProgress;
+    private float warningProgress;
     private Status status;
     private FryingRecipeSO recipe;
 
@@ -81,7 +84,15 @@ public class StoveCounter : KitchenObjectParentAbstract {
                     }
                 case Status.BURNING: {
                         burningProgress += Time.deltaTime;
-                        progressBarBurning.ProgressUpdate(burningProgress / recipe.timeToBurn);
+                        warningProgress += Time.deltaTime;
+                        float progress = burningProgress / recipe.timeToBurn;
+                        progressBarBurning.ProgressUpdate(progress);
+
+                        if (warningProgress > WARNING_TIMER_MAX) {
+                            warningProgress = 0.0f;
+                            SoundsManager.Instance.PlayWarningSound();
+                        }
+
                         if (burningProgress >= recipe.timeToBurn) {
                             GetKitchenObject().DestroySelf();
                             KitchenObject.SpawnKitchenObject(recipe.burned, this);

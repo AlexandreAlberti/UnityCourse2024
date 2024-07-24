@@ -19,6 +19,10 @@ public class PlatesCounter : KitchenObjectParentAbstract {
         platesSpawned = 0;
     }
     private void Update() {
+        if (!GameManager.Instance.IsGamePlaying()) {
+            return;
+        }
+
         if (platesSpawned < maxPlatesInPileCount) {
 
             plateSpawnTimer += Time.deltaTime;

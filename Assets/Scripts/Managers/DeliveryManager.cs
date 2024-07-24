@@ -34,6 +34,10 @@ public class DeliveryManager : MonoBehaviour
             return;
         }
 
+        if (!GameManager.Instance.IsGamePlaying()) {
+            return;
+        }
+
         spawnRecipeTimer += Time.deltaTime;
         
         if (spawnRecipeTimer < spawnTimerMax) {
@@ -46,7 +50,7 @@ public class DeliveryManager : MonoBehaviour
         OnRecipeSpawned?.Invoke(this, EventArgs.Empty);
     }
 
-    public void DeliverRecipe(PlateKitchenObject plateKitchenObject, Vector3 counterPosition) {
+    public bool DeliverRecipe(PlateKitchenObject plateKitchenObject, Vector3 counterPosition) {
         for(int i = 0; i < waitingRecipeList.Count; ++i) {
             RecipeSO recipe = waitingRecipeList[i];
             bool recipeValid = true;
@@ -74,13 +78,15 @@ public class DeliveryManager : MonoBehaviour
                     position = counterPosition
                 });
                 recipesDelivered++;
-                return;
+                return true;
             }
         }
 
         OnRecipeFailed?.Invoke(this, new SoundPositionEventArgs {
             position = counterPosition
         });
+
+        return false;
     }
 
     public List<RecipeSO> GetRecipeWaitingList() {

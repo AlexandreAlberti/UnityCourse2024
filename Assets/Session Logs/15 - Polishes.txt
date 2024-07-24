@@ -1,0 +1,36 @@
+Vamos a pulir un poco esto.
+
+01 - Añadimos paredes. Creamos un cubo que haga de pared, le aplicamos la textura de pared y listo, jugamos con el scale para adaptarlo.
+	 Tambien añadimos otro cubo con textura negra para que haga de "fondo" falso y no se vea el suelo al otro lado de las paredes
+
+02 - Añadimos particulas al moverse. Le arrastramos el prefab al player y listo (PlayerMovingParticles)
+
+03 - Añadimos una pantalla tutorial (como el options de sonido y tal) - Usando la imagen (Tutorial) - y mostrando las teclas asignadas encima, etc.
+     Tecnicamente se muestra en el Waiting to start. Se quita el temporizador de este estado y se espera a que se presione el boton de acción para cambiar el estado.
+     Si hacemos el remapeado de teclas, usamos las buenas. Sino usamos las por defecto. (Me lo salto, no aporta nada)
+
+04 - El delivery manager solo crea recetas y el spawneo de platos solo funciona mientras esta en juego, no antes. ("if (!GameManager.Instance.IsGamePlaying()) {return;}")
+
+05 - Añadimos animacion a la cuenta atrás. La lanzamos con un trigger en el GameStartCountdownUI, si el ultimo int es diferente al nuevo. 
+     Lanzamos un sonido de countdown de warning.
+
+06 - Añadimos una señal de warning a la barra roja de la cocina. La metemos en el Contenido de esta. Hacemos que esta tambien lanze un sonido de warning cada 0.2s
+     Podemos añadir que la señal de warning aparezca y desaparezca todo el rato, asi como cambiar el color de tipos de rojo para que resalte mas (Paso Saltado, es mas de lo mismo)
+
+07 - Añadir algo que diga si hemos entregado bien o mal la receta. Del mismo modo que la barra de progreso, un panel con borde, texto e imagen. 
+     Hacemos un script que se inicialize apagado, con funciones de showSuccess o showFailure, que despues de unos segundos se apagan.
+     Le podemos añadir otra animacion que dure lo que toque (No hecho, mas de lo mismo).
+     Podemos hacer 2 diferentes o uno y que se cambien los colores y tal al activarlo:
+         public void ShowSuccess() {
+            background.gameObject.SetActive(true);
+            messageShowTimer = 0.0f;
+            enabled = true;
+
+            background.color = successColor;
+            sprite.sprite = successSprite;
+            resultText.text = successText;
+        }
+
+08 - Play the game.
+
+Fin de session. Video a 9:22:20

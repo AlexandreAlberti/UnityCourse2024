@@ -70,4 +70,12 @@ public class SoundsManager : MonoBehaviour
     public void PlayFootstepSound(Vector3 position) {
         PlaySound(sounds.footsteps[UnityEngine.Random.Range(0, sounds.footsteps.Length)], position);
     }
+
+    public void PlayCountdownSound() {
+        PlaySound(sounds.warning[UnityEngine.Random.Range(0, sounds.warning.Length)], Vector3.zero);
+    }
+
+    public void PlayWarningSound() {
+        PlaySound(sounds.warning[UnityEngine.Random.Range(0, sounds.warning.Length)], Vector3.zero);
+    }
 }
